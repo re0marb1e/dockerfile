@@ -1,6 +1,6 @@
 FROM node:8.4.0
-MAINTAINER Xiaotian Zhao "zhxt1016@gmail.com"
-ENV REFRESHED_AT 2017-09-09
+MAINTAINER re0marb1e re0marb1e@outlook.com
+ENV REFRESHED_AT 2018-10-01
 RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 RUN cnpm install -g drakov
 EXPOSE 3000
