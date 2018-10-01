@@ -1,6 +1,6 @@
 # Drakov Dockerfile
 
-Drakov docker image for mocking server that implements the API Blueprint specification
+This Dockfile is used to mock server that implements the API Blueprint specification.
 
 ## Build the image
 
