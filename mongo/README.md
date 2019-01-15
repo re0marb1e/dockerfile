@@ -13,10 +13,10 @@ docker pull mongo:4.0.4
 ## Run the container
 
 ```shell
-mkdir -p /data/mongo/conf /data/mongo/db /data/mongo/mount
-cp ./mongod.conf /data/mongo/conf/mongod.conf
-export DOCKER_MONGO_VERSION=4.0.4
-docker run -d -p 27017:27017 -v /data/mongo/conf:/etc/mongo -v /data/mongo/db:/data/db -v /data/mongo/mount:/mount --name mongo -d mongo:$DOCKER_MONGO_VERSION --config /etc/mongo/mongod.conf
+export DOCKER_MONGO_VERSION=4.0.4;
+docker volume create mongo-data;
+docker run --rm -v mongo-data:/volume -v $(pwd):/mongo-conf mongo:$DOCKER_MONGO_VERSION bash -c 'mkdir -p /volume/conf /volume/db /volume/mount && cp /mongo-conf/mongod.conf /volume/conf/mongod.conf && chown mongodb /volume/db';
+docker run -d -p 27017:27017 -v mongo-data:/volume --name mongo mongo:$DOCKER_MONGO_VERSION --config /volume/conf/mongod.conf;
 ```
 
 ## Auth
@@ -54,7 +54,7 @@ To enable auth in mongo:
     
     ```
     docker rm -f mongo
-    docker run -d -p 27017:27017 -v /data/mongo/conf:/etc/mongo -v /data/mongo/db:/data/db -v /data/mongo/mount:/mount --name mongo -d mongo:$DOCKER_MONGO_VERSION --config /etc/mongo/mongod.conf --auth
+    docker run -d -p 27017:27017 -v mongo-data:/volume --name mongo mongo:$DOCKER_MONGO_VERSION --config /volume/conf/mongod.conf --auth;
     ```
 
 -   Or add "security.authorization: enabled" to the the mongod.conf file
@@ -75,13 +75,6 @@ Execute following in mongo shell
 use admin;
 db.auth('admin', '7eunEXjwxu');
 use alpha;
-db.createUser(
-  {
-    user: "alphaAdmin",
-    pwd: "KbUjjQi6rg",
-    roles: [ { role: "dbAdmin", db: "alpha" }]
-  }
-);
 db.createUser(
   {
     user: "alphaOwner",
